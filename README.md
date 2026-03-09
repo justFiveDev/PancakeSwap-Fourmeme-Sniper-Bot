@@ -1,10 +1,10 @@
-# Four.meme Sniper Bot – BNB Chain Trading Bot
+# Fourmeme Sniper Bot – BNB Chain Four.meme Sniper
 
 <div align="center">
 
-**High‑Performance Four.meme Sniper + Bundler Bot for BNB Smart Chain**
+**Fourmeme sniper bot for BNB Smart Chain – automated token sniping, MEV-protected bundling, PancakeSwap V3**
 
-*Automated Token Sniping | Four.meme Integration | Liquidity Deployment | MEV‑Protected Bundling*
+*Four.meme sniper • BNB Chain • bloXroute bundles • PancakeSwap V3*
 
 [![Hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow.svg)](https://hardhat.org/)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.19-blue.svg)](https://soliditylang.org/)
@@ -15,76 +15,73 @@
 
 ---
 
-## 🔍 SEO‑Optimized Tags  
-**Keywords:** fourmeme sniper bot, four.meme sniping bot, BNB chain sniper bot, meme sniper bot, bundler bot BSC, bloXroute sniper, PancakeSwap V3 bot, fourmeme auto‑buy bot, fourmeme launch sniper.
+## Fourmeme Sniper Bot – What It Does
+
+This repo is a **fourmeme sniper bot** for **BNB Smart Chain (BSC)**. It helps you:
+
+- **Snipe Four.meme launches** – Detect and buy new Four.meme tokens quickly.
+- **Run atomic bundles** – Use **bloXroute** so deploy + pool + buy run in one bundle (MEV protection).
+- **Use PancakeSwap V3** – Create pools, set price, add liquidity, and buy in a single flow.
+
+If you’re searching for a **fourmeme sniper bot**, **Four.meme sniper**, or **Four.meme BSC sniper**, this project is built for that use case.
 
 ---
 
-## Overview
+## Project Architecture
 
-A **professional-grade Four.meme sniper bot** built for **BNB Smart Chain**, enabling:
+High-level layout and how the pieces connect.
 
-- ultra‑fast token sniping on **Four.meme launches**
-- automated liquidity provisioning
-- bundled atomic operations through **bloXroute**
-- fork-based mainnet simulations  
-- full MEV protection for high‑value trades
+### Repository Structure
 
-This bot is optimized for:
-- **Four.meme token sniping**
-- **PancakeSwap V3 deployments**
-- **Bundler‑based MEV‑safe transactions**
-- **BNB Chain high‑frequency operations**
+```
+PancakeSwap-Fourmeme-Sniper-Bot/
+├── contracts/
+│   └── MyToken.sol              # ERC20 token (OpenZeppelin), used in deploy + pool flow
+├── scripts/
+│   ├── bloxroute.js             # Main entry: bundle builder + bloXroute submit (sniper bot)
+│   ├── deploy.js                # Hardhat deploy script (e.g. Lock / contracts)
+│   └── abi.js                   # PancakeSwap V3 / Uniswap V3 ABIs (Factory, Pool, SwapRouter, etc.)
+├── constants/
+│   └── index.js                 # RPC, bloXroute endpoint, PancakeSwap V3 addresses, WBNB, gas config
+├── test/
+│   └── Lock.js                  # Integration tests: token deploy, pool create, liquidity, swap (BSC fork)
+├── hardhat.config.js           # Networks (BSC mainnet, testnet, hardhat fork), Solidity, gas reporter
+├── package.json
+└── README.md
+```
 
----
+### Component Roles
 
-## Features
+| Component | Role |
+|-----------|------|
+| **scripts/bloxroute.js** | Main fourmeme sniper bot: builds atomic bundle (token deploy → approvals → pool create → init → liquidity → buy) and submits it to bloXroute. |
+| **constants/index.js** | Single place for RPC URL, bloXroute endpoint/auth, PancakeSwap V3 factory/router/NFPM addresses, WBNB, and gas defaults. |
+| **scripts/abi.js** | Uniswap V3–compatible ABIs for PancakeSwap V3 (Factory, Pool, SwapRouter, token approve, etc.). |
+| **contracts/MyToken.sol** | ERC20 used when the bot deploys a new token as part of the bundle. |
+| **hardhat.config.js** | BSC mainnet, BSC testnet, and Hardhat network with BSC fork for local/testing. |
+| **test/Lock.js** | End-to-end test on a BSC fork: deploy token, create V3 pool, add liquidity, swap (validates the flow the bot uses). |
 
-- **🎯 Four.meme Sniper Engine**  
-  Detect new Four.meme token listings instantly and submit atomic buys.
+### Data and Execution Flow
 
-- **🚀 Token Deployment**  
-  Deploy ERC20 tokens with custom parameters.
-
-- **💧 Liquidity Automation**  
-  Create liquidity pools on PancakeSwap V3 and initialize with any price.
-
-- **⚡ MEV‑Protected Bundling**  
-  All operations use **bloXroute bundles** for front‑run protection.
-
-- **📈 Volume/Market Maker Tools**  
-  Supports volume generation, strategy rotation, and auto‑buying.
-
-- **🧪 Mainnet Fork Testing**  
-  Hardhat fork mode included for safe simulations.
-
----
-
-## Technology Stack
-
-| Component | Technology |
-|-----------|-----------|
-| Smart Contracts | Solidity ^0.8.9 |
-| Framework | Hardhat ^2.19.5 |
-| Sniper Logic | Four.meme Listener + BSC RPC |
-| Bundling | bloXroute |
-| DEX | PancakeSwap V3 / Uniswap V3 SDK |
-| Security | OpenZeppelin |
-| RPC | QuickNode |
+1. **Config** – `.env` (e.g. `PRIVATE_KEY`, `AUTHORIZATION_HEADER`) and optionally `constants/index.js` / env for RPC and bloXroute.
+2. **Bot startup** – `node scripts/bloxroute.js` (or `npm run dev`) loads config, connects to BSC via RPC, creates wallet.
+3. **Bundle build** – Bot builds signed tx list: deploy token → approve token/WBNB for NFPM → create pool → initialize pool → add liquidity → (optional) initial buy.
+4. **Submission** – Signed transactions are sent to bloXroute as a single bundle for a target block (MEV protection, atomic execution).
+5. **Testing** – `npm run sn` starts a BSC fork; `npm run t` runs tests against that fork to verify the same flow.
 
 ---
 
-## Prerequisites
+## How to Run This Project
 
-- **Node.js v16+**
-- **QuickNode (BSC RPC)**
-- **bloXroute Account**
-- **Wallet with BNB**
-- **Basic knowledge of BSC token trading**
+### Prerequisites
 
----
+- **Node.js** v16+
+- **BSC RPC** (e.g. QuickNode or public endpoint)
+- **bloXroute** account and API key (for bundle submission)
+- **Wallet** with BNB for gas and trading
+- Basic familiarity with BSC and Four.meme
 
-## Installation
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/m4rcu5o/PancakeSwap-Fourmeme-Sniper-Bot
@@ -92,48 +89,64 @@ cd PancakeSwap-Fourmeme-Sniper-Bot
 npm install
 ```
 
-### Add environment variables  
-Create `.env`:
+### 2. Environment variables
 
-```
-PRIVATE_KEY=your_private_key
-AUTHORIZATION_HEADER=your_bloxroute_token
-```
+Create a `.env` in the project root:
 
----
-
-## Configuration
-
-### Hardhat Fork RPC
-
-```js
-networks: {
-  hardhat: {
-    forking: {
-      url: "YOUR_BSC_RPC_URL",
-    },
-  },
-}
+```env
+PRIVATE_KEY=your_private_key_hex
+AUTHORIZATION_HEADER=your_bloxroute_authorization_header
 ```
 
-### bloXroute Settings
+Optional (used by scripts/constants if set):
 
-```
-BLOXROUTE_AUTHORIZATION_HEADER="your_key"
-BLOXROUTE_ENDPOINT="https://api.blxrbdn.com"
-```
+- `RPC_URL` or `BSC_RPC_URL` – BSC RPC endpoint
+- `BSC_FORK_URL` – RPC used for Hardhat fork (e.g. `npm run sn`)
+- `BLOXROUTE_ENDPOINT` – bloXroute API (default in code if not set)
+- `TOKEN_NAME`, `TOKEN_SYMBOL`, `TOKEN_SUPPLY` – for token deploy step in the bot
+- `GAS_PRICE_MULTIPLIER`, `FUTURE_BLOCK_OFFSET`, `FEE_TIER`, `INITIAL_PRICE` – for bundle/build behavior
 
----
+### 3. Run the Fourmeme Sniper Bot
 
-## Usage
+**Mainnet (live sniper):**
 
 ```bash
-npm run sn     # Start BSC mainnet fork
-npm run t      # Run tests
-npm run dev    # Launch sniper bot
+npm run dev
 ```
 
-Additional Hardhat commands:
+or:
+
+```bash
+npm start
+```
+
+Both run `scripts/bloxroute.js`: connect to BSC, build the bundle, and submit it to bloXroute.
+
+### 4. Local BSC fork and tests
+
+**Start a BSC fork (separate terminal):**
+
+```bash
+npm run sn
+```
+
+This runs `npx hardhat node --network hardhat` with BSC forking (see `hardhat.config.js`).
+
+**Run tests (with fork running):**
+
+```bash
+npm run t
+```
+
+or:
+
+```bash
+npm test
+```
+
+Tests use the local fork to deploy token, create pool, add liquidity, and swap.
+
+### 5. Other useful commands
 
 ```bash
 npx hardhat compile
@@ -143,64 +156,54 @@ REPORT_GAS=true npx hardhat test
 
 ---
 
-## Project Structure
+## Features
 
-```
-bnb-sniper-bundler-volume-bot/
-├── contracts/
-├── scripts/
-│   ├── bloxroute.js
-│   ├── fourmeme-sniper.js
-│   ├── deploy.js
-│   └── abi.js
-├── constants/
-├── test/
-├── hardhat.config.js
-└── README.md
-```
+- **Four.meme sniper flow** – Token deploy + pool creation + liquidity + optional buy in one bundle.
+- **MEV protection** – Bundles submitted via bloXroute for atomic execution and reduced front-running risk.
+- **PancakeSwap V3** – Uses V3 factory, pool, and router (Uniswap V3–compatible ABIs).
+- **Configurable** – Token params, gas multiplier, target block offset, fee tier, and initial price via env.
+- **Fork testing** – Hardhat BSC fork and integration tests to validate the full flow before mainnet.
 
 ---
 
-## Workflow (Bundled Execution)
+## Technology Stack
 
-1. Detect new Four.meme token  
-2. Deploy ERC20 token (optional)  
-3. Approve token + WBNB  
-4. Create PancakeSwap V3 pool  
-5. Initialize price  
-6. Provide liquidity  
-7. Automatically buy token using bloXroute atomic bundle  
-
-This ensures **no frontrunning**, **no sandwiching**, and **fastest execution**.
+| Layer | Technology |
+|-------|------------|
+| Smart contracts | Solidity ^0.8.9 (OpenZeppelin ERC20) |
+| Build / test | Hardhat ^2.19.5 |
+| Sniper / bundles | scripts/bloxroute.js, BSC RPC, bloXroute API |
+| DEX | PancakeSwap V3 (Uniswap V3–compatible SDK/ABIs) |
+| RPC | Configurable (e.g. QuickNode, public BSC RPC) |
 
 ---
 
-## Security Considerations
+## Security and Risk
 
-- Never expose private keys  
-- Use burner wallets for testing  
-- Always verify bundles before sending  
-- Consider MEV implications when trading  
-- Simulate everything on fork environment first  
+- Never commit or share `.env` or private keys.
+- Prefer a burner or dedicated wallet for testing.
+- Always test on a BSC fork first (`npm run sn` + `npm run t`).
+- Crypto and meme trading are high risk; use at your own risk.
 
 ---
 
 ## Disclaimer
 
-This project is for **educational purposes only**.  
-Crypto trading carries risk. Use responsibly.
+This project is for **educational and research purposes**. Trading and sniping on BSC and Four.meme involve financial risk. Use responsibly and understand the code and flow before running with real funds.
 
 ---
 
-## Support & Contact
+## Author and Contact
 
-**Telegram:** [RRR](https://t.me/microRustyme)
+**Author:** microRustyme  
+**Telegram:** [@microRustyme](https://t.me/microRustyme)  
+**TG ID:** microRustyme
 
 ---
 
 <div align="center">
 
-**🔥 Optimized for Four.meme Sniping on BNB Chain 🔥**  
-**Built with ❤️ for professional traders**
+**Fourmeme Sniper Bot for BNB Chain**  
+*PancakeSwap V3 • bloXroute • Four.meme*
 
 </div>
