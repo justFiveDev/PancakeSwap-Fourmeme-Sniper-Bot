@@ -193,11 +193,9 @@ This project is for **educational and research purposes**. Trading and sniping o
 
 ---
 
-## Author and Contact
+## Contact
 
-**Author:** microRustyme  
-**Telegram:** [@microRustyme](https://t.me/microRustyme)  
-**TG ID:** microRustyme
+fiv3fingers.dev@gmail.com
 
 ---
 
