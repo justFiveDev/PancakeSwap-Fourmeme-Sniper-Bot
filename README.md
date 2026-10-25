@@ -195,7 +195,7 @@ This project is for **educational and research purposes**. Trading and sniping o
 
 ## Contact
 
-fiv3fingers.dev@gmail.com
+[Telegram](https://t.me/fiv3dev)
 
 ---
 
